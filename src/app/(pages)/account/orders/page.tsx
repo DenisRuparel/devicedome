@@ -1,25 +1,25 @@
-import React from 'react'
-import { Metadata } from 'next'
-import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import React from 'react';
+import { Metadata } from 'next';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
 
-import { Order } from '../../../../payload/payload-types'
-import { Button } from '../../../_components/Button'
-import { RenderParams } from '../../../_components/RenderParams'
-import { formatDateTime } from '../../../_utilities/formatDateTime'
-import { getMeUser } from '../../../_utilities/getMeUser'
-import { mergeOpenGraph } from '../../../_utilities/mergeOpenGraph'
+import { Order } from '../../../../payload/payload-types';
+import { Button } from '../../../_components/Button';
+import { RenderParams } from '../../../_components/RenderParams';
+import { formatDateTime } from '../../../_utilities/formatDateTime';
+import { getMeUser } from '../../../_utilities/getMeUser';
+import { mergeOpenGraph } from '../../../_utilities/mergeOpenGraph';
 
-import classes from './index.module.scss'
+import classes from './index.module.scss';
 
 export default async function Orders() {
   const { token } = await getMeUser({
     nullUserRedirect: `/login?error=${encodeURIComponent(
-      'You must be logged in to view your orders.',
+      'You must be logged in to view your orders.'
     )}&redirect=${encodeURIComponent('/orders')}`,
-  })
+  });
 
-  let orders: Order[] | null = null
+  let orders: Order[] | null = null;
 
   try {
     orders = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/orders`, {
@@ -30,15 +30,15 @@ export default async function Orders() {
       cache: 'no-store',
     })
       ?.then(async res => {
-        if (!res.ok) notFound()
-        const json = await res.json()
-        if ('error' in json && json.error) notFound()
-        if ('errors' in json && json.errors) notFound()
-        return json
+        if (!res.ok) notFound();
+        const json = await res.json();
+        if ('error' in json && json.error) notFound();
+        if ('errors' in json && json.errors) notFound();
+        return json;
       })
-      ?.then(json => json.docs)
+      ?.then(json => json.docs);
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
 
   return (
@@ -52,7 +52,10 @@ export default async function Orders() {
         <ul className={classes.orders}>
           {orders?.map(order => (
             <li key={order.id} className={classes.order}>
-              <Link className={classes.item} href={`/account/orders/${order.id}`}>
+              <Link
+                className={classes.item}
+                href={`/account/orders/${order.id}`}
+              >
                 <div className={classes.itemContent}>
                   <h6 className={classes.itemTitle}>{`Order ${order.id}`}</h6>
                   <div className={classes.itemMeta}>
@@ -63,9 +66,9 @@ export default async function Orders() {
                         currency: 'usd',
                       }).format(order.total / 100)}
                     </p>
-                    <p className={classes.orderDate}>{`Ordered On: ${formatDateTime(
-                      order.createdAt,
-                    )}`}</p>
+                    <p
+                      className={classes.orderDate}
+                    >{`Ordered On: ${formatDateTime(order.createdAt)}`}</p>
                   </div>
                 </div>
                 <Button
@@ -81,7 +84,7 @@ export default async function Orders() {
         </ul>
       )}
     </div>
-  )
+  );
 }
 
 export const metadata: Metadata = {
@@ -91,4 +94,4 @@ export const metadata: Metadata = {
     title: 'Orders',
     url: '/orders',
   }),
-}
+};

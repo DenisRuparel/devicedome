@@ -1,4 +1,4 @@
-import type { Page } from '../payload-types'
+import type { Page } from '../payload-types';
 
 export const staticHome: Page = {
   id: '',
@@ -8,7 +8,8 @@ export const staticHome: Page = {
   updatedAt: '',
   meta: {
     title: 'Payload E-Commerce Template',
-    description: 'An open-source e-commerce store built with Payload and Next.js.',
+    description:
+      'An open-source e-commerce store built with Payload and Next.js.',
   },
   hero: {
     type: 'lowImpact',
@@ -123,4 +124,4 @@ export const staticHome: Page = {
       blockType: 'cta',
     },
   ],
-}
+};

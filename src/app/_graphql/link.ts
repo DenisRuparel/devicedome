@@ -1,9 +1,12 @@
 interface Args {
-  disableLabel?: true
-  disableAppearance?: true
+  disableLabel?: true;
+  disableAppearance?: true;
 }
 
-export const LINK_FIELDS = ({ disableAppearance, disableLabel }: Args = {}): string => `{
+export const LINK_FIELDS = ({
+  disableAppearance,
+  disableLabel,
+}: Args = {}): string => `{
   ${!disableLabel ? 'label' : ''}
   ${!disableAppearance ? 'appearance' : ''}
   type
@@ -20,4 +23,4 @@ export const LINK_FIELDS = ({ disableAppearance, disableLabel }: Args = {}): str
       }
     }
   }
-}`
+}`;

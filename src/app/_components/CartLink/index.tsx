@@ -1,25 +1,28 @@
-'use client'
+'use client';
 
-import React, { Fragment, useEffect, useState } from 'react'
-import Link from 'next/link'
+import React, { Fragment, useEffect, useState } from 'react';
+import Link from 'next/link';
 
-import { useCart } from '../../_providers/Cart'
+import { useCart } from '../../_providers/Cart';
 
-import classes from './index.module.scss'
+import classes from './index.module.scss';
 
 export const CartLink: React.FC<{
-  className?: string
+  className?: string;
 }> = props => {
-  const { className } = props
-  const { cart } = useCart()
-  const [length, setLength] = useState<number>()
+  const { className } = props;
+  const { cart } = useCart();
+  const [length, setLength] = useState<number>();
 
   useEffect(() => {
-    setLength(cart?.items?.length || 0)
-  }, [cart])
+    setLength(cart?.items?.length || 0);
+  }, [cart]);
 
   return (
-    <Link className={[classes.cartLink, className].filter(Boolean).join(' ')} href="/cart">
+    <Link
+      className={[classes.cartLink, className].filter(Boolean).join(' ')}
+      href="/cart"
+    >
       <Fragment>
         Cart
         {typeof length === 'number' && length > 0 && (
@@ -27,5 +30,5 @@ export const CartLink: React.FC<{
         )}
       </Fragment>
     </Link>
-  )
-}
+  );
+};

@@ -1,19 +1,19 @@
-import React from 'react'
-import Link from 'next/link'
+import React from 'react';
+import Link from 'next/link';
 
-import { Media } from '../../../_components/Media'
-import { Price } from '../../../_components/Price'
-import { formatDateTime } from '../../../_utilities/formatDateTime'
-import { getMeUser } from '../../../_utilities/getMeUser'
+import { Media } from '../../../_components/Media';
+import { Price } from '../../../_components/Price';
+import { formatDateTime } from '../../../_utilities/formatDateTime';
+import { getMeUser } from '../../../_utilities/getMeUser';
 
-import classes from './index.module.scss'
+import classes from './index.module.scss';
 
 export default async function Purchases() {
   const { user } = await getMeUser({
     nullUserRedirect: `/login?error=${encodeURIComponent(
-      'You must be logged in to access your account.',
+      'You must be logged in to access your account.'
     )}&redirect=${encodeURIComponent('/account')}`,
-  })
+  });
 
   return (
     <div>
@@ -27,26 +27,35 @@ export default async function Purchases() {
                   {typeof purchase === 'string' ? (
                     <p>{purchase} Test</p>
                   ) : (
-                    <Link href={`/products/${purchase.slug}`} className={classes.item}>
+                    <Link
+                      href={`/products/${purchase.slug}`}
+                      className={classes.item}
+                    >
                       <div className={classes.mediaWrapper}>
                         {!purchase.meta.image && (
                           <div className={classes.placeholder}>No image</div>
                         )}
-                        {purchase.meta.image && typeof purchase.meta.image !== 'string' && (
-                          <Media imgClassName={classes.image} resource={purchase.meta.image} />
-                        )}
+                        {purchase.meta.image &&
+                          typeof purchase.meta.image !== 'string' && (
+                            <Media
+                              imgClassName={classes.image}
+                              resource={purchase.meta.image}
+                            />
+                          )}
                       </div>
                       <div className={classes.itemDetails}>
                         <h6>{purchase.title}</h6>
                         <Price product={purchase} />
-                        <p className={classes.purchasedDate}>{`Purchased On: ${formatDateTime(
-                          purchase.createdAt,
+                        <p
+                          className={classes.purchasedDate}
+                        >{`Purchased On: ${formatDateTime(
+                          purchase.createdAt
                         )}`}</p>
                       </div>
                     </Link>
                   )}
                 </li>
-              )
+              );
             })}
           </ul>
         ) : (
@@ -54,5 +63,5 @@ export default async function Purchases() {
         )}
       </div>
     </div>
-  )
+  );
 }

@@ -1,18 +1,19 @@
-import * as React from 'react'
-import { Select, useFormFields } from 'payload/components/forms'
-import CopyToClipboard from 'payload/dist/admin/components/elements/CopyToClipboard'
-import { TextField } from 'payload/dist/fields/config/types'
+import * as React from 'react';
+import { Select, useFormFields } from 'payload/components/forms';
+import CopyToClipboard from 'payload/dist/admin/components/elements/CopyToClipboard';
+import { TextField } from 'payload/dist/fields/config/types';
 
 export const CustomerSelect: React.FC<TextField> = props => {
-  const { name, label } = props
+  const { name, label } = props;
   const [options, setOptions] = React.useState<
     {
-      label: string
-      value: string
+      label: string;
+      value: string;
     }[]
-  >([])
+  >([]);
 
-  const { value: stripeCustomerID } = useFormFields(([fields]) => fields[name]) || {}
+  const { value: stripeCustomerID } =
+    useFormFields(([fields]) => fields[name]) || {};
 
   React.useEffect(() => {
     const getStripeCustomers = async () => {
@@ -22,9 +23,9 @@ export const CustomerSelect: React.FC<TextField> = props => {
           headers: {
             'Content-Type': 'application/json',
           },
-        })
+        });
 
-        const res = await customersFetch.json()
+        const res = await customersFetch.json();
 
         if (res?.data) {
           const fetchedCustomers = res.data.reduce(
@@ -32,33 +33,35 @@ export const CustomerSelect: React.FC<TextField> = props => {
               acc.push({
                 label: item.name || item.email || item.id,
                 value: item.id,
-              })
-              return acc
+              });
+              return acc;
             },
             [
               {
                 label: 'Select a customer',
                 value: '',
               },
-            ],
-          )
-          setOptions(fetchedCustomers)
+            ]
+          );
+          setOptions(fetchedCustomers);
         }
       } catch (error) {
-        console.error(error) // eslint-disable-line no-console
+        console.error(error); // eslint-disable-line no-console
       }
-    }
+    };
 
-    getStripeCustomers()
-  }, [])
+    getStripeCustomers();
+  }, []);
 
   const href = `https://dashboard.stripe.com/${
     process.env.PAYLOAD_PUBLIC_STRIPE_IS_TEST_KEY ? 'test/' : ''
-  }customers/${stripeCustomerID}`
+  }customers/${stripeCustomerID}`;
 
   return (
     <div>
-      <p style={{ marginBottom: '0' }}>{typeof label === 'string' ? label : 'Customer'}</p>
+      <p style={{ marginBottom: '0' }}>
+        {typeof label === 'string' ? label : 'Customer'}
+      </p>
       <p
         style={{
           marginBottom: '0.75rem',
@@ -89,7 +92,8 @@ export const CustomerSelect: React.FC<TextField> = props => {
               }}
             >
               {`Manage "${
-                options.find(option => option.value === stripeCustomerID)?.label || 'Unknown'
+                options.find(option => option.value === stripeCustomerID)
+                  ?.label || 'Unknown'
               }" in Stripe`}
             </span>
             <CopyToClipboard value={href} />
@@ -114,5 +118,5 @@ export const CustomerSelect: React.FC<TextField> = props => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};

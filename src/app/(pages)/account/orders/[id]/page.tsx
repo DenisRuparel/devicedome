@@ -1,46 +1,49 @@
-import React, { Fragment } from 'react'
-import { Metadata } from 'next'
-import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import React, { Fragment } from 'react';
+import { Metadata } from 'next';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
 
-import type { Order } from '../../../../../payload/payload-types'
-import { HR } from '../../../../_components/HR'
-import { Media } from '../../../../_components/Media'
-import { Price } from '../../../../_components/Price'
-import { formatDateTime } from '../../../../_utilities/formatDateTime'
-import { getMeUser } from '../../../../_utilities/getMeUser'
-import { mergeOpenGraph } from '../../../../_utilities/mergeOpenGraph'
+import type { Order } from '../../../../../payload/payload-types';
+import { HR } from '../../../../_components/HR';
+import { Media } from '../../../../_components/Media';
+import { Price } from '../../../../_components/Price';
+import { formatDateTime } from '../../../../_utilities/formatDateTime';
+import { getMeUser } from '../../../../_utilities/getMeUser';
+import { mergeOpenGraph } from '../../../../_utilities/mergeOpenGraph';
 
-import classes from './index.module.scss'
+import classes from './index.module.scss';
 
 export default async function Order({ params: { id } }) {
   const { token } = await getMeUser({
     nullUserRedirect: `/login?error=${encodeURIComponent(
-      'You must be logged in to view this order.',
+      'You must be logged in to view this order.'
     )}&redirect=${encodeURIComponent(`/order/${id}`)}`,
-  })
+  });
 
-  let order: Order | null = null
+  let order: Order | null = null;
 
   try {
-    order = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/orders/${id}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `JWT ${token}`,
-      },
-    })?.then(async res => {
-      if (!res.ok) notFound()
-      const json = await res.json()
-      if ('error' in json && json.error) notFound()
-      if ('errors' in json && json.errors) notFound()
-      return json
-    })
+    order = await fetch(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/orders/${id}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `JWT ${token}`,
+        },
+      }
+    )?.then(async res => {
+      if (!res.ok) notFound();
+      const json = await res.json();
+      if ('error' in json && json.error) notFound();
+      if ('errors' in json && json.errors) notFound();
+      return json;
+    });
   } catch (error) {
-    console.error(error) // eslint-disable-line no-console
+    console.error(error); // eslint-disable-line no-console
   }
 
   if (!order) {
-    notFound()
+    notFound();
   }
 
   return (
@@ -69,15 +72,20 @@ export default async function Order({ params: { id } }) {
               quantity,
               product,
               product: { id, title, meta, stripeProductID },
-            } = item
+            } = item;
 
-            const metaImage = meta?.image
+            const metaImage = meta?.image;
 
             return (
               <Fragment key={index}>
                 <div className={classes.row}>
-                  <Link href={`/products/${product.slug}`} className={classes.mediaWrapper}>
-                    {!metaImage && <span className={classes.placeholder}>No image</span>}
+                  <Link
+                    href={`/products/${product.slug}`}
+                    className={classes.mediaWrapper}
+                  >
+                    {!metaImage && (
+                      <span className={classes.placeholder}>No image</span>
+                    )}
                     {metaImage && typeof metaImage !== 'string' && (
                       <Media
                         className={classes.media}
@@ -90,7 +98,9 @@ export default async function Order({ params: { id } }) {
                   <div className={classes.rowContent}>
                     {!stripeProductID && (
                       <p className={classes.warning}>
-                        {'This product is not yet connected to Stripe. To link this product, '}
+                        {
+                          'This product is not yet connected to Stripe. To link this product, '
+                        }
                         <Link
                           href={`${process.env.NEXT_PUBLIC_SERVER_URL}/admin/collections/products/${id}`}
                         >
@@ -100,24 +110,31 @@ export default async function Order({ params: { id } }) {
                       </p>
                     )}
                     <h6 className={classes.title}>
-                      <Link href={`/products/${product.slug}`} className={classes.titleLink}>
+                      <Link
+                        href={`/products/${product.slug}`}
+                        className={classes.titleLink}
+                      >
                         {title}
                       </Link>
                     </h6>
                     <p>{`Quantity: ${quantity}`}</p>
-                    <Price product={product} button={false} quantity={quantity} />
+                    <Price
+                      product={product}
+                      button={false}
+                      quantity={quantity}
+                    />
                   </div>
                 </div>
               </Fragment>
-            )
+            );
           }
 
-          return null
+          return null;
         })}
       </div>
       <HR className={classes.hr} />
     </div>
-  )
+  );
 }
 
 export async function generateMetadata({ params: { id } }): Promise<Metadata> {
@@ -128,5 +145,5 @@ export async function generateMetadata({ params: { id } }): Promise<Metadata> {
       title: `Order ${id}`,
       url: `/orders/${id}`,
     }),
-  }
+  };
 }
